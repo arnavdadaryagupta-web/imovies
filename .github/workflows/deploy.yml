@@ -21,7 +21,8 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-      - run: npm run build
+      - run: cd frontend && npm install
+      - run: cd frontend && chmod +x node_modules/.bin/vite && npx vite build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
