@@ -1,0 +1,14 @@
+{
+  "name": "the-imovies-platform",
+  "version": "1.0.0",
+  "description": "The IMovies - Online Movie Ticket Reservation Platform",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["movie", "tickets", "cinema", "express", "mongodb", "react", "bootstrap", "jwt"],
+  "author": "The IMovies Team",
+  "license": "MIT"
+}

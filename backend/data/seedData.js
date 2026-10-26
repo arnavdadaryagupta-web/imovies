@@ -1,0 +1,417 @@
+const bcrypt = require('bcryptjs');
+
+const getSeedData = async () => {
+  const salt = await bcrypt.genSalt(10);
+  const userPassword = await bcrypt.hash('password123', salt);
+  const adminPassword = await bcrypt.hash('admin123', salt);
+
+  const users = [
+    {
+      _id: '671000000000000000000001',
+      name: 'Cinema Admin',
+      email: 'admin@imovies.com',
+      password: adminPassword,
+      role: 'admin',
+      phone: '+1 987-654-3210',
+      createdAt: new Date().toISOString(),
+    },
+    {
+      _id: '671000000000000000000002',
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: userPassword,
+      role: 'user',
+      phone: '+1 234-567-8900',
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  const movies = [
+    {
+      _id: '671100000000000000000001',
+      title: 'Dune: Part Two',
+      description: 'Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.',
+      synopsis: 'A boy becomes Messiah of a nomadic people on a desert planet with giant worms and a vast spice supply. Facing a choice between the love of his life and the fate of the known universe, he endeavors to prevent a terrible future only he can foresee.',
+      posterUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/Way9Dexny3w',
+      genre: ['Sci-Fi', 'Adventure', 'Action'],
+      duration: 166,
+      language: ['English', 'Hindi'],
+      releaseDate: '2024-03-01',
+      rating: 8.8,
+      ageRating: 'UA 16+',
+      director: 'Denis Villeneuve',
+      cast: [
+        { name: 'Timothée Chalamet', role: 'Paul Atreides', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Zendaya', role: 'Chani', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Austin Butler', role: 'Feyd-Rautha Harkonnen', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Rebecca Ferguson', role: 'Lady Jessica', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: true,
+      isUpcoming: false,
+      ticketPriceBase: 250,
+    },
+    {
+      _id: '671100000000000000000002',
+      title: 'Oppenheimer',
+      description: 'The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.',
+      synopsis: 'A dramatization of the life story of J. Robert Oppenheimer, the physicist who had a large hand in the development of the Manhattan Project during World War II, leading to the creation of the atomic bomb.',
+      posterUrl: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/uYPbbksJxIg',
+      genre: ['Biography', 'Drama', 'History'],
+      duration: 180,
+      language: ['English'],
+      releaseDate: '2023-07-21',
+      rating: 8.9,
+      ageRating: 'R',
+      director: 'Christopher Nolan',
+      cast: [
+        { name: 'Cillian Murphy', role: 'J. Robert Oppenheimer', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Emily Blunt', role: 'Katherine Oppenheimer', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Robert Downey Jr.', role: 'Lewis Strauss', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: true,
+      isUpcoming: false,
+      ticketPriceBase: 280,
+    },
+    {
+      _id: '671100000000000000000003',
+      title: 'Interstellar',
+      description: 'When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft along with a team of researchers.',
+      synopsis: 'In a dystopian future where humanity is struggling to survive, a group of astronauts travel through a wormhole near Saturn in search of a new home for mankind.',
+      posterUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/zSWdZVtXT7E',
+      genre: ['Sci-Fi', 'Drama', 'Adventure'],
+      duration: 169,
+      language: ['English', 'Spanish'],
+      releaseDate: '2014-11-07',
+      rating: 8.7,
+      ageRating: 'PG-13',
+      director: 'Christopher Nolan',
+      cast: [
+        { name: 'Matthew McConaughey', role: 'Cooper', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Anne Hathaway', role: 'Brand', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Jessica Chastain', role: 'Murph', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: true,
+      isUpcoming: false,
+      ticketPriceBase: 220,
+    },
+    {
+      _id: '671100000000000000000004',
+      title: 'The Dark Knight',
+      description: 'When the menace known as the Joker wreaks havoc and chaos on Gotham City, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
+      synopsis: 'Batman raises the stakes in his war on crime with the help of Lt. Jim Gordon and District Attorney Harvey Dent. But a sadistic mastermind known as the Joker unleashes a reign of terror.',
+      posterUrl: 'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1514306191717-452ec28c7814?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/EXeTwQWrcwY',
+      genre: ['Action', 'Crime', 'Drama'],
+      duration: 152,
+      language: ['English'],
+      releaseDate: '2008-07-18',
+      rating: 9.0,
+      ageRating: 'PG-13',
+      director: 'Christopher Nolan',
+      cast: [
+        { name: 'Christian Bale', role: 'Bruce Wayne / Batman', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Heath Ledger', role: 'Joker', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Michael Caine', role: 'Alfred', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: true,
+      isUpcoming: false,
+      ticketPriceBase: 240,
+    },
+    {
+      _id: '671100000000000000000005',
+      title: 'Gladiator II',
+      description: 'Years after witnessing the death of Maximus at the hands of his uncle, Lucius must enter the Colosseum after the powerful emperors of Rome conquer his home.',
+      synopsis: 'From legendary director Ridley Scott, Gladiator II continues the epic saga of power, intrigue, and vengeance set in Ancient Rome.',
+      posterUrl: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/4rgYUipGJNo',
+      genre: ['Action', 'Adventure', 'Drama'],
+      duration: 148,
+      language: ['English', 'Hindi'],
+      releaseDate: '2024-11-22',
+      rating: 8.4,
+      ageRating: 'R',
+      director: 'Ridley Scott',
+      cast: [
+        { name: 'Paul Mescal', role: 'Lucius', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Pedro Pascal', role: 'Marcus Acacius', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Denzel Washington', role: 'Macrinus', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: true,
+      isUpcoming: false,
+      ticketPriceBase: 260,
+    },
+    {
+      _id: '671100000000000000000006',
+      title: 'Avatar: Fire and Ash',
+      description: 'The upcoming third installment in James Cameron’s sci-fi epic saga, exploring the aggressive Ash People of Pandora.',
+      synopsis: 'Jake Sully and Neytiri face new perils on Pandora as they encounter the fire-worshiping Ash tribe of Na’vi who dwell in volcanic landscapes.',
+      posterUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80',
+      bannerUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1600&q=80',
+      trailerUrl: 'https://www.youtube.com/embed/d9MyW72ELq0',
+      genre: ['Sci-Fi', 'Action', 'Fantasy'],
+      duration: 190,
+      language: ['English', 'Hindi', 'Tamil'],
+      releaseDate: '2025-12-19',
+      rating: 9.1,
+      ageRating: 'PG-13',
+      director: 'James Cameron',
+      cast: [
+        { name: 'Sam Worthington', role: 'Jake Sully', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+        { name: 'Zoe Saldana', role: 'Neytiri', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' }
+      ],
+      isNowShowing: false,
+      isUpcoming: true,
+      ticketPriceBase: 300,
+    },
+  ];
+
+  const theaters = [
+    {
+      _id: '671200000000000000000001',
+      name: 'IMovies Luxe Cinema - Downtown Nexus',
+      city: 'Downtown Metro',
+      address: '742 Boulevard Avenue, Film City Plaza',
+      facilities: ['Dolby Atmos', '4K Laser Projection', 'Recliner Seats', 'Gourmet Lounge'],
+      screens: [
+        { screenNumber: 1, screenName: 'IMAX Audi 1', totalSeats: 80, rows: 8, cols: 10 },
+        { screenNumber: 2, screenName: 'Dolby Atmos Audi 2', totalSeats: 80, rows: 8, cols: 10 },
+      ],
+    },
+    {
+      _id: '671200000000000000000002',
+      name: 'IMovies Grand Galleria 4DX',
+      city: 'Westside Hub',
+      address: 'Floor 4, Grand Galleria Mall, Outer Ring Road',
+      facilities: ['4DX Motion Seats', 'Dolby Surround 7.1', 'Snack Bar', 'Valet Parking'],
+      screens: [
+        { screenNumber: 1, screenName: '4DX Audi 1', totalSeats: 80, rows: 8, cols: 10 },
+        { screenNumber: 2, screenName: 'Gold Class Audi 2', totalSeats: 80, rows: 8, cols: 10 },
+      ],
+    },
+    {
+      _id: '671200000000000000000003',
+      name: 'IMovies PVR Icon - Horizon Towers',
+      city: 'Cyber City',
+      address: 'Tower B, Tech Park Central',
+      facilities: ['Laser 3D', 'VIP Dining', 'Dolby Atmos', 'Electric Recliners'],
+      screens: [
+        { screenNumber: 1, screenName: 'Icon Screen 1', totalSeats: 80, rows: 8, cols: 10 },
+      ],
+    },
+  ];
+
+  // Helper for dates (today, tomorrow, day after tomorrow)
+  const today = new Date().toISOString().split('T')[0];
+  const tomorrowDate = new Date(Date.now() + 86400000);
+  const tomorrow = tomorrowDate.toISOString().split('T')[0];
+  const dayAfterDate = new Date(Date.now() + 172800000);
+  const dayAfter = dayAfterDate.toISOString().split('T')[0];
+
+  const showtimes = [
+    // Dune: Part Two showtimes
+    {
+      _id: '671300000000000000000001',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000001',
+      screenNumber: 1,
+      date: today,
+      startTime: '10:30 AM',
+      format: 'IMAX 3D',
+      language: 'English',
+      basePrice: 280,
+      reservedSeats: ['D4', 'D5', 'E6', 'E7'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000002',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000001',
+      screenNumber: 1,
+      date: today,
+      startTime: '02:45 PM',
+      format: 'IMAX 3D',
+      language: 'English',
+      basePrice: 300,
+      reservedSeats: ['F4', 'F5', 'G5'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000003',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000001',
+      screenNumber: 1,
+      date: today,
+      startTime: '07:15 PM',
+      format: 'IMAX 3D',
+      language: 'English',
+      basePrice: 350,
+      reservedSeats: ['C3', 'C4', 'E4', 'E5', 'H1', 'H2'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000004',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000002',
+      screenNumber: 1,
+      date: today,
+      startTime: '04:00 PM',
+      format: '4DX',
+      language: 'Hindi',
+      basePrice: 320,
+      reservedSeats: ['A1', 'A2'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000005',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000001',
+      screenNumber: 1,
+      date: tomorrow,
+      startTime: '06:30 PM',
+      format: 'IMAX 3D',
+      language: 'English',
+      basePrice: 320,
+      reservedSeats: ['E5', 'E6'],
+      totalSeats: 80,
+    },
+
+    // Oppenheimer showtimes
+    {
+      _id: '671300000000000000000006',
+      movie: '671100000000000000000002',
+      theater: '671200000000000000000001',
+      screenNumber: 2,
+      date: today,
+      startTime: '11:00 AM',
+      format: '2D Dolby Atmos',
+      language: 'English',
+      basePrice: 260,
+      reservedSeats: ['B3', 'B4'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000007',
+      movie: '671100000000000000000002',
+      theater: '671200000000000000000003',
+      screenNumber: 1,
+      date: today,
+      startTime: '05:30 PM',
+      format: '2D Dolby Atmos',
+      language: 'English',
+      basePrice: 290,
+      reservedSeats: ['D1', 'D2', 'D3'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000008',
+      movie: '671100000000000000000002',
+      theater: '671200000000000000000001',
+      screenNumber: 2,
+      date: tomorrow,
+      startTime: '08:00 PM',
+      format: '2D Dolby Atmos',
+      language: 'English',
+      basePrice: 280,
+      reservedSeats: ['C5', 'C6'],
+      totalSeats: 80,
+    },
+
+    // Interstellar showtimes
+    {
+      _id: '671300000000000000000009',
+      movie: '671100000000000000000003',
+      theater: '671200000000000000000002',
+      screenNumber: 2,
+      date: today,
+      startTime: '01:15 PM',
+      format: 'IMAX 2D',
+      language: 'English',
+      basePrice: 240,
+      reservedSeats: ['A5', 'A6'],
+      totalSeats: 80,
+    },
+    {
+      _id: '671300000000000000000010',
+      movie: '671100000000000000000003',
+      theater: '671200000000000000000003',
+      screenNumber: 1,
+      date: today,
+      startTime: '09:00 PM',
+      format: 'IMAX 2D',
+      language: 'English',
+      basePrice: 270,
+      reservedSeats: ['G3', 'G4'],
+      totalSeats: 80,
+    },
+
+    // The Dark Knight showtimes
+    {
+      _id: '671300000000000000000011',
+      movie: '671100000000000000000004',
+      theater: '671200000000000000000001',
+      screenNumber: 2,
+      date: today,
+      startTime: '03:30 PM',
+      format: '2D',
+      language: 'English',
+      basePrice: 220,
+      reservedSeats: ['D6', 'D7'],
+      totalSeats: 80,
+    },
+
+    // Gladiator II showtimes
+    {
+      _id: '671300000000000000000012',
+      movie: '671100000000000000000005',
+      theater: '671200000000000000000002',
+      screenNumber: 1,
+      date: today,
+      startTime: '08:45 PM',
+      format: '3D',
+      language: 'English',
+      basePrice: 260,
+      reservedSeats: ['F1', 'F2'],
+      totalSeats: 80,
+    },
+  ];
+
+  const bookings = [
+    {
+      _id: '671400000000000000000001',
+      bookingId: 'IMV-2026-89421',
+      user: '671000000000000000000002',
+      movie: '671100000000000000000001',
+      theater: '671200000000000000000001',
+      showtime: '671300000000000000000001',
+      seats: [
+        { seatNumber: 'D4', tier: 'Premium', price: 280 },
+        { seatNumber: 'D5', tier: 'Premium', price: 280 },
+      ],
+      showDate: today,
+      showTime: '10:30 AM',
+      format: 'IMAX 3D',
+      totalAmount: 560,
+      convenienceFee: 30,
+      discountAmount: 50,
+      finalAmount: 540,
+      promoCode: 'MOVIEPASS',
+      paymentMethod: 'UPI / QR',
+      paymentStatus: 'Paid',
+      bookingStatus: 'Confirmed',
+      ticketQrData: 'IMV-2026-89421|671100000000000000000001|D4,D5',
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  return { users, movies, theaters, showtimes, bookings };
+};
+
+module.exports = { getSeedData };
