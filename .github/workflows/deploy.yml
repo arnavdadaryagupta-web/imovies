@@ -3,11 +3,16 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
@@ -16,20 +21,29 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install Root Dependencies
-        run: npm install
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+
       - name: Install Frontend Dependencies
-        run: cd frontend && npm install
+        working-directory: frontend
+        run: npm install
+
       - name: Build Frontend
-        run: cd frontend && chmod +x node_modules/.bin/vite && npm run build
-      - name: Upload Artifact
+        working-directory: frontend
+        run: npm run build
+
+      - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
