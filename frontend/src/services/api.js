@@ -9,11 +9,15 @@ const isStaticHosting =
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
+const DB_VERSION = 'v2_20261028_dynamic';
+
 // Local storage client fallback store
 const getClientStore = () => {
   try {
+    const version = localStorage.getItem('imovies_db_version');
     const raw = localStorage.getItem('imovies_client_db');
-    if (!raw) {
+    if (!raw || version !== DB_VERSION) {
+      localStorage.setItem('imovies_db_version', DB_VERSION);
       localStorage.setItem('imovies_client_db', JSON.stringify(INITIAL_MOCK_DATA));
       return INITIAL_MOCK_DATA;
     }
@@ -42,6 +46,56 @@ const getHeaders = (tokenRequired = false) => {
     }
   }
   return headers;
+};
+
+// Ensure dynamic showtimes exist for any active movie and date
+const generateClientShowtimesForMovieDate = (store, movie, date) => {
+  const theaters = store.theaters || [];
+  if (theaters.length === 0) return [];
+
+  const basePrice = movie.ticketPriceBase || 250;
+  const templates = [
+    { theaterIndex: 0, screenNumber: 1, startTime: '10:30 AM', format: 'IMAX 3D', priceOffset: 30 },
+    { theaterIndex: 0, screenNumber: 1, startTime: '02:45 PM', format: 'IMAX 3D', priceOffset: 50 },
+    { theaterIndex: 0, screenNumber: 1, startTime: '07:15 PM', format: 'IMAX 3D', priceOffset: 70 },
+    { theaterIndex: 1, screenNumber: 1, startTime: '11:15 AM', format: '4DX', priceOffset: 60 },
+    { theaterIndex: 1, screenNumber: 1, startTime: '04:00 PM', format: '4DX', priceOffset: 80 },
+    { theaterIndex: 1, screenNumber: 2, startTime: '08:30 PM', format: '3D Dolby', priceOffset: 40 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '01:00 PM', format: '2D Dolby Atmos', priceOffset: 20 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '06:15 PM', format: '2D Dolby Atmos', priceOffset: 50 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '09:45 PM', format: '2D Dolby Atmos', priceOffset: 40 },
+  ];
+
+  const cleanDate = date.replace(/[^0-9]/g, '');
+  const cleanMovie = movie._id.toString().slice(-4);
+  const generated = [];
+
+  store.showtimes = store.showtimes || [];
+
+  templates.forEach((tpl, idx) => {
+    const theater = theaters[tpl.theaterIndex % theaters.length];
+    const newId = `st_${cleanMovie}_${theater._id.toString().slice(-4)}_${cleanDate}_${idx + 1}`;
+    let existing = store.showtimes.find((s) => s._id === newId);
+    if (!existing) {
+      existing = {
+        _id: newId,
+        movie: movie._id,
+        theater: theater._id,
+        screenNumber: tpl.screenNumber,
+        date: date,
+        startTime: tpl.startTime,
+        format: tpl.format,
+        basePrice: basePrice + tpl.priceOffset,
+        reservedSeats: ['D4', 'D5'],
+        totalSeats: 80,
+      };
+      store.showtimes.push(existing);
+    }
+    generated.push(existing);
+  });
+
+  saveClientStore(store);
+  return generated;
 };
 
 // Promo code list
@@ -269,6 +323,12 @@ export const api = {
     let list = store.showtimes.filter((s) => s.movie.toString() === movieId.toString());
     if (date) {
       list = list.filter((s) => s.date === date);
+      if (list.length === 0) {
+        const movie = store.movies.find((m) => m._id.toString() === movieId.toString());
+        if (movie && !movie.isUpcoming) {
+          list = generateClientShowtimesForMovieDate(store, movie, date);
+        }
+      }
     }
     return list.map((s) => ({
       ...s,
@@ -291,7 +351,21 @@ export const api = {
     }
 
     const store = getClientStore();
-    const showtime = store.showtimes.find((s) => s._id.toString() === id.toString());
+    let showtime = store.showtimes.find((s) => s._id.toString() === id.toString());
+    if (!showtime && id.startsWith('st_')) {
+      const parts = id.split('_');
+      if (parts.length >= 5) {
+        const cleanDate = parts[3];
+        if (cleanDate.length === 8) {
+          const formattedDate = `${cleanDate.slice(0, 4)}-${cleanDate.slice(4, 6)}-${cleanDate.slice(6, 8)}`;
+          const matchingMovie = store.movies.find((m) => m._id.toString().slice(-4) === parts[1]);
+          if (matchingMovie) {
+            generateClientShowtimesForMovieDate(store, matchingMovie, formattedDate);
+            showtime = store.showtimes.find((s) => s._id.toString() === id.toString());
+          }
+        }
+      }
+    }
     if (!showtime) throw new Error('Showtime not found');
 
     const movie = store.movies.find((m) => m._id.toString() === showtime.movie.toString());

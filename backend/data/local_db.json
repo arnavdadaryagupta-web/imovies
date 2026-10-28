@@ -557,6 +557,312 @@
         "F2"
       ],
       "totalSeats": 80
+    },
+    {
+      "_id": "st_0001_0001_20261028_1",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "10:30 AM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 280,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0001_20261028_2",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "02:45 PM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 300,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0001_20261028_3",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "07:15 PM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 320,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0002_20261028_4",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "11:15 AM",
+      "format": "4DX",
+      "language": "English",
+      "basePrice": 310,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0002_20261028_5",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "04:00 PM",
+      "format": "4DX",
+      "language": "English",
+      "basePrice": 330,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0002_20261028_6",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 2,
+      "date": "2026-10-28",
+      "startTime": "08:30 PM",
+      "format": "3D Dolby",
+      "language": "English",
+      "basePrice": 290,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0003_20261028_7",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "01:00 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 270,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0003_20261028_8",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "06:15 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 300,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0003_20261028_9",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-28",
+      "startTime": "09:45 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 290,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:50:42.898Z"
+    },
+    {
+      "_id": "st_0001_0001_20261029_1",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "10:30 AM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 280,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0001_20261029_2",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "02:45 PM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 300,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0001_20261029_3",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000001",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "07:15 PM",
+      "format": "IMAX 3D",
+      "language": "English",
+      "basePrice": 320,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0002_20261029_4",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "11:15 AM",
+      "format": "4DX",
+      "language": "English",
+      "basePrice": 310,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0002_20261029_5",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "04:00 PM",
+      "format": "4DX",
+      "language": "English",
+      "basePrice": 330,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0002_20261029_6",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000002",
+      "screenNumber": 2,
+      "date": "2026-10-29",
+      "startTime": "08:30 PM",
+      "format": "3D Dolby",
+      "language": "English",
+      "basePrice": 290,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0003_20261029_7",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "01:00 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 270,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0003_20261029_8",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "06:15 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 300,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
+    },
+    {
+      "_id": "st_0001_0003_20261029_9",
+      "movie": "671100000000000000000001",
+      "theater": "671200000000000000000003",
+      "screenNumber": 1,
+      "date": "2026-10-29",
+      "startTime": "09:45 PM",
+      "format": "2D Dolby Atmos",
+      "language": "English",
+      "basePrice": 290,
+      "reservedSeats": [
+        "D4",
+        "D5"
+      ],
+      "totalSeats": 80,
+      "createdAt": "2026-10-28T16:51:37.874Z"
     }
   ],
   "bookings": [

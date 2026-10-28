@@ -201,102 +201,123 @@ export default function MovieDetailsPage() {
 
         {/* Showtimes & Theaters Section */}
         <div id="showtimes-section" className="pt-3">
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-            <div>
-              <h4 className="fw-bold text-white mb-1">
-                <i className="bi bi-calendar2-week text-gold me-2"></i> Select Showtime & Theater
-              </h4>
-              <p className="text-muted small mb-0">Choose your preferred screening time and seat format</p>
-            </div>
-
-            {/* Date Selector Tabs */}
-            <div className="d-flex gap-2">
-              {dateOptions.map((d) => (
+          {movie.isUpcoming ? (
+            <div className="p-5 text-center bg-cinema-card rounded-4 border border-warning border-opacity-25 shadow-sm">
+              <div className="fs-1 text-gold mb-3">🎬</div>
+              <h4 className="text-white fw-bold mb-2">Upcoming Release — Advance Bookings Open Soon!</h4>
+              <p className="text-muted mb-4" style={{ maxWidth: '600px', margin: '0 auto' }}>
+                This film is scheduled for theatrical release on <strong className="text-white">{new Date(movie.releaseDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</strong>. Advance seat booking across all multiplexes will open 5 days prior to premiere.
+              </p>
+              {movie.trailerUrl && (
                 <button
-                  key={d.value}
-                  className={`btn rounded-3 px-3 py-2 text-center border ${selectedDate === d.value ? 'btn-gold border-warning' : 'bg-cinema-card text-light border-secondary border-opacity-50'}`}
-                  onClick={() => setSelectedDate(d.value)}
+                  className="btn btn-gold rounded-pill px-4 py-2"
+                  onClick={() => setShowTrailer(true)}
                 >
-                  <div className="small fw-bold">{d.day}</div>
-                  <div style={{ fontSize: '0.75rem' }}>{d.date}</div>
+                  <i className="bi bi-play-circle-fill me-2 fs-5 align-middle"></i>
+                  Watch Official Trailer
                 </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Showtimes Listing */}
-          {Object.keys(showtimesByTheater).length === 0 ? (
-            <div className="text-center py-5 bg-cinema-card rounded-4 border border-secondary border-opacity-25">
-              <i className="bi bi-calendar-x fs-1 text-muted"></i>
-              <h5 className="mt-3 text-white">No Showtimes Available For This Date</h5>
-              <p className="text-muted small">Try selecting another date or check back later.</p>
+              )}
             </div>
           ) : (
-            <div className="d-flex flex-column gap-4">
-              {Object.values(showtimesByTheater).map(({ theater, shows }) => (
-                <div
-                  key={theater ? theater._id : Math.random()}
-                  className="p-4 rounded-4 bg-cinema-card border border-secondary border-opacity-25 shadow-sm"
-                >
-                  <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
-                    <div>
-                      <h5 className="text-white fw-bold mb-1">
-                        <i className="bi bi-building text-gold me-2"></i>
-                        {theater ? theater.name : 'IMovies Cineplex'}
-                      </h5>
-                      <span className="text-muted small">
-                        <i className="bi bi-geo-alt me-1 text-danger"></i>
-                        {theater ? theater.address : 'Central Mall'}
-                      </span>
-                    </div>
-
-                    {/* Facilities badges */}
-                    {theater && theater.facilities && (
-                      <div className="d-flex flex-wrap gap-1">
-                        {theater.facilities.map((f) => (
-                          <span
-                            key={f}
-                            className="badge bg-dark text-secondary border border-secondary border-opacity-25"
-                            style={{ fontSize: '0.68rem' }}
-                          >
-                            <i className="bi bi-check2 text-success me-1"></i> {f}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Showtime Slots */}
-                  <div className="d-flex flex-wrap gap-3">
-                    {shows.map((show) => {
-                      const avail = show.availableSeats !== undefined ? show.availableSeats : 70;
-                      const isAlmostFull = avail < 15;
-                      return (
-                        <button
-                          key={show._id}
-                          className="btn btn-outline-secondary text-light p-3 rounded-3 text-start position-relative hover-lift border-secondary border-opacity-50"
-                          style={{ minWidth: '150px' }}
-                          onClick={() => navigate(`/booking/${show._id}`)}
-                        >
-                          <div className="fw-bold fs-6 text-white mb-1">
-                            {show.startTime}
-                          </div>
-                          <div className="badge badge-format mb-1">
-                            {show.format}
-                          </div>
-                          <div className="small text-muted d-flex justify-content-between gap-2 mt-1">
-                            <span>₹{show.basePrice || 250}</span>
-                            <span className={isAlmostFull ? 'text-danger' : 'text-success'}>
-                              {avail} left
-                            </span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
+            <>
+              <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                <div>
+                  <h4 className="fw-bold text-white mb-1">
+                    <i className="bi bi-calendar2-week text-gold me-2"></i> Select Showtime & Theater
+                  </h4>
+                  <p className="text-muted small mb-0">Choose your preferred screening time and seat format</p>
                 </div>
-              ))}
-            </div>
+
+                {/* Date Selector Tabs */}
+                <div className="d-flex gap-2">
+                  {dateOptions.map((d) => (
+                    <button
+                      key={d.value}
+                      className={`btn rounded-3 px-3 py-2 text-center border ${selectedDate === d.value ? 'btn-gold border-warning' : 'bg-cinema-card text-light border-secondary border-opacity-50'}`}
+                      onClick={() => setSelectedDate(d.value)}
+                    >
+                      <div className="small fw-bold">{d.day}</div>
+                      <div style={{ fontSize: '0.75rem' }}>{d.date}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Showtimes Listing */}
+              {Object.keys(showtimesByTheater).length === 0 ? (
+                <div className="text-center py-5 bg-cinema-card rounded-4 border border-secondary border-opacity-25">
+                  <i className="bi bi-calendar-x fs-1 text-muted"></i>
+                  <h5 className="mt-3 text-white">No Showtimes Available For This Date</h5>
+                  <p className="text-muted small">Try selecting another date or check back later.</p>
+                </div>
+              ) : (
+                <div className="d-flex flex-column gap-4">
+                  {Object.values(showtimesByTheater).map(({ theater, shows }) => (
+                    <div
+                      key={theater ? theater._id : Math.random()}
+                      className="p-4 rounded-4 bg-cinema-card border border-secondary border-opacity-25 shadow-sm"
+                    >
+                      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3 pb-3 border-bottom border-secondary border-opacity-25">
+                        <div>
+                          <h5 className="text-white fw-bold mb-1">
+                            <i className="bi bi-building text-gold me-2"></i>
+                            {theater ? theater.name : 'IMovies Cineplex'}
+                          </h5>
+                          <span className="text-muted small">
+                            <i className="bi bi-geo-alt me-1 text-danger"></i>
+                            {theater ? theater.address : 'Central Mall'}
+                          </span>
+                        </div>
+
+                        {/* Facilities badges */}
+                        {theater && theater.facilities && (
+                          <div className="d-flex flex-wrap gap-1">
+                            {theater.facilities.map((f) => (
+                              <span
+                                key={f}
+                                className="badge bg-dark text-secondary border border-secondary border-opacity-25"
+                                style={{ fontSize: '0.68rem' }}
+                              >
+                                <i className="bi bi-check2 text-success me-1"></i> {f}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Showtime Slots */}
+                      <div className="d-flex flex-wrap gap-3">
+                        {shows.map((show) => {
+                          const avail = show.availableSeats !== undefined ? show.availableSeats : 70;
+                          const isAlmostFull = avail < 15;
+                          return (
+                            <button
+                              key={show._id}
+                              className="btn btn-outline-secondary text-light p-3 rounded-3 text-start position-relative hover-lift border-secondary border-opacity-50"
+                              style={{ minWidth: '150px' }}
+                              onClick={() => navigate(`/booking/${show._id}`)}
+                            >
+                              <div className="fw-bold fs-6 text-white mb-1">
+                                {show.startTime}
+                              </div>
+                              <div className="badge badge-format mb-1">
+                                {show.format}
+                              </div>
+                              <div className="small text-muted d-flex justify-content-between gap-2 mt-1">
+                                <span>₹{show.basePrice || 250}</span>
+                                <span className={isAlmostFull ? 'text-danger' : 'text-success'}>
+                                  {avail} left
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

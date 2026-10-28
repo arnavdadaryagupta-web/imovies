@@ -218,17 +218,107 @@ const createTheater = async (theaterData) => {
   return newTheater;
 };
 
+// Ensure showtimes exist for any active movie and date
+const ensureShowtimesForMovieDate = (db, movieId, date) => {
+  const movie = db.movies.find((m) => m._id.toString() === movieId.toString());
+  if (!movie || movie.isUpcoming) return [];
+
+  const theaters = db.theaters || [];
+  if (theaters.length === 0) return [];
+
+  const basePrice = movie.ticketPriceBase || 250;
+  const templates = [
+    { theaterIndex: 0, screenNumber: 1, startTime: '10:30 AM', format: 'IMAX 3D', priceOffset: 30 },
+    { theaterIndex: 0, screenNumber: 1, startTime: '02:45 PM', format: 'IMAX 3D', priceOffset: 50 },
+    { theaterIndex: 0, screenNumber: 1, startTime: '07:15 PM', format: 'IMAX 3D', priceOffset: 70 },
+    { theaterIndex: 1, screenNumber: 1, startTime: '11:15 AM', format: '4DX', priceOffset: 60 },
+    { theaterIndex: 1, screenNumber: 1, startTime: '04:00 PM', format: '4DX', priceOffset: 80 },
+    { theaterIndex: 1, screenNumber: 2, startTime: '08:30 PM', format: '3D Dolby', priceOffset: 40 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '01:00 PM', format: '2D Dolby Atmos', priceOffset: 20 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '06:15 PM', format: '2D Dolby Atmos', priceOffset: 50 },
+    { theaterIndex: 2, screenNumber: 1, startTime: '09:45 PM', format: '2D Dolby Atmos', priceOffset: 40 },
+  ];
+
+  const generated = [];
+  const cleanDate = date.replace(/[^0-9]/g, '');
+  const cleanMovie = movieId.toString().slice(-4);
+
+  templates.forEach((tpl, idx) => {
+    const theater = theaters[tpl.theaterIndex % theaters.length];
+    const newId = `st_${cleanMovie}_${theater._id.toString().slice(-4)}_${cleanDate}_${idx + 1}`;
+    let existing = db.showtimes.find((s) => s._id === newId);
+    if (!existing) {
+      existing = {
+        _id: newId,
+        movie: movie._id,
+        theater: theater._id,
+        screenNumber: tpl.screenNumber,
+        date: date,
+        startTime: tpl.startTime,
+        format: tpl.format,
+        language: Array.isArray(movie.language) ? movie.language[0] : 'English',
+        basePrice: basePrice + tpl.priceOffset,
+        reservedSeats: ['D4', 'D5'],
+        totalSeats: 80,
+        createdAt: new Date().toISOString(),
+      };
+      db.showtimes.push(existing);
+    }
+    generated.push(existing);
+  });
+
+  writeJSONDb(db);
+  return generated;
+};
+
 // Showtimes
 const getShowtimesForMovie = async (movieId, date) => {
   if (isMongoReady()) {
     let query = { movie: movieId };
     if (date) query.date = date;
-    return await Showtime.find(query).populate('theater').populate('movie');
+    let list = await Showtime.find(query).populate('theater').populate('movie');
+    if (list.length === 0 && date) {
+      const movie = await Movie.findById(movieId);
+      if (movie && !movie.isUpcoming) {
+        const theaters = await Theater.find();
+        if (theaters.length > 0) {
+          const templates = [
+            { theaterIndex: 0, screenNumber: 1, startTime: '10:30 AM', format: 'IMAX 3D', priceOffset: 30 },
+            { theaterIndex: 0, screenNumber: 1, startTime: '02:45 PM', format: 'IMAX 3D', priceOffset: 50 },
+            { theaterIndex: 0, screenNumber: 1, startTime: '07:15 PM', format: 'IMAX 3D', priceOffset: 70 },
+            { theaterIndex: 1, screenNumber: 1, startTime: '11:15 AM', format: '4DX', priceOffset: 60 },
+            { theaterIndex: 1, screenNumber: 1, startTime: '04:00 PM', format: '4DX', priceOffset: 80 },
+            { theaterIndex: 1, screenNumber: 2, startTime: '08:30 PM', format: '3D Dolby', priceOffset: 40 },
+          ];
+          for (const tpl of templates) {
+            const th = theaters[tpl.theaterIndex % theaters.length];
+            await Showtime.create({
+              movie: movie._id,
+              theater: th._id,
+              screenNumber: tpl.screenNumber,
+              date: date,
+              startTime: tpl.startTime,
+              format: tpl.format,
+              language: Array.isArray(movie.language) ? movie.language[0] : 'English',
+              basePrice: (movie.ticketPriceBase || 250) + tpl.priceOffset,
+              reservedSeats: ['D4', 'D5'],
+              totalSeats: 80,
+            });
+          }
+          list = await Showtime.find(query).populate('theater').populate('movie');
+        }
+      }
+    }
+    return list;
   }
+
   const db = await readJSONDb();
   let list = db.showtimes.filter((s) => s.movie.toString() === movieId.toString());
   if (date) {
     list = list.filter((s) => s.date === date);
+    if (list.length === 0) {
+      list = ensureShowtimesForMovieDate(db, movieId, date);
+    }
   }
   return list.map((s) => ({
     ...s,
@@ -243,7 +333,21 @@ const getShowtimeById = async (id) => {
     return await Showtime.findById(id).populate('theater').populate('movie');
   }
   const db = await readJSONDb();
-  const s = db.showtimes.find((s) => s._id.toString() === id.toString());
+  let s = db.showtimes.find((item) => item._id.toString() === id.toString());
+  if (!s && id.startsWith('st_')) {
+    const parts = id.split('_');
+    if (parts.length >= 5) {
+      const cleanDate = parts[3];
+      if (cleanDate.length === 8) {
+        const formattedDate = `${cleanDate.slice(0, 4)}-${cleanDate.slice(4, 6)}-${cleanDate.slice(6, 8)}`;
+        const matchingMovie = db.movies.find((m) => m._id.toString().slice(-4) === parts[1]);
+        if (matchingMovie) {
+          ensureShowtimesForMovieDate(db, matchingMovie._id, formattedDate);
+          s = db.showtimes.find((item) => item._id.toString() === id.toString());
+        }
+      }
+    }
+  }
   if (!s) return null;
   return {
     ...s,
