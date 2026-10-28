@@ -5,7 +5,9 @@ A full-stack, enterprise-grade online movie ticket booking platform built with *
 The IMovies replicates modern cinema booking platforms like AMC, Cineplex, and BookMyShow, featuring interactive seat selection with tiered pricing, real-time seat locking to prevent double-bookings, coupon discount validation, digital QR-code ticket issuance, and comprehensive administrative analytics.
 
 ---
+<video src="https://github.com/imovie video.mp4" width="600"></video>
 
+---
 ## 🚀 Key Features
 
 - **Dynamic Movie Catalogue**: Browse Now Showing and Upcoming movies, filter by genre and language, search with instant autocomplete.
